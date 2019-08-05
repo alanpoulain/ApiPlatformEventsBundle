@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="api_platform.graphql.resolver.stage.deserialize.event" class="ApiPlatform\EventsBundle\GraphQl\Stage\DeserializeStage" decorates="api_platform.graphql.resolver.stage.deserialize" public="false">
+            <argument type="service" id="api_platform.graphql.resolver.stage.deserialize.event.inner"/>
+            <argument type="service" id="event_dispatcher"/>
+        </service>
+
+        <service id="api_platform.graphql.resolver.stage.read.event" class="ApiPlatform\EventsBundle\GraphQl\Stage\ReadStage" decorates="api_platform.graphql.resolver.stage.read" public="false">
+            <argument type="service" id="api_platform.graphql.resolver.stage.read.event.inner"/>
+            <argument type="service" id="event_dispatcher"/>
+        </service>
+
+        <service id="api_platform.graphql.resolver.stage.serialize.event" class="ApiPlatform\EventsBundle\GraphQl\Stage\SerializeStage" decorates="api_platform.graphql.resolver.stage.serialize" public="false">
+            <argument type="service" id="api_platform.graphql.resolver.stage.serialize.event.inner"/>
+            <argument type="service" id="event_dispatcher"/>
+        </service>
+
+        <service id="api_platform.graphql.resolver.stage.validate.event" class="ApiPlatform\EventsBundle\GraphQl\Stage\ValidateStage" decorates="api_platform.graphql.resolver.stage.validate" public="false">
+            <argument type="service" id="api_platform.graphql.resolver.stage.validate.event.inner"/>
+            <argument type="service" id="event_dispatcher"/>
+        </service>
+
+        <service id="api_platform.graphql.resolver.stage.write.event" class="ApiPlatform\EventsBundle\GraphQl\Stage\WriteStage" decorates="api_platform.graphql.resolver.stage.write" public="false">
+            <argument type="service" id="api_platform.graphql.resolver.stage.write.event.inner"/>
+            <argument type="service" id="event_dispatcher"/>
+        </service>
+    </services>
+</container>
