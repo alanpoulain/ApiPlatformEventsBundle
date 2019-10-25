@@ -5,7 +5,7 @@
  *
  * (c) Alan Poulain <contact@alanpoulain.eu>
  *
- * For the full copyright and license information, please view the LICENSE.md
+ * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
@@ -35,11 +35,11 @@ final class DeserializeStage implements DeserializeStageInterface
     /**
      * {@inheritdoc}
      */
-    public function apply($objectToPopulate, string $resourceClass, string $operationName, array $context)
+    public function __invoke($objectToPopulate, string $resourceClass, string $operationName, array $context)
     {
         $this->eventDispatcher->dispatch(new PreDeserializeEvent($objectToPopulate, $resourceClass, $operationName, $context));
 
-        $deserializedObject = $this->deserializeStage->apply($objectToPopulate, $resourceClass, $operationName, $context);
+        $deserializedObject = ($this->deserializeStage)($objectToPopulate, $resourceClass, $operationName, $context);
 
         $this->eventDispatcher->dispatch(new PostDeserializeEvent($deserializedObject, $resourceClass, $operationName, $context));
 

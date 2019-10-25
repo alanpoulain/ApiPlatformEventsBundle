@@ -5,7 +5,7 @@
  *
  * (c) Alan Poulain <contact@alanpoulain.eu>
  *
- * For the full copyright and license information, please view the LICENSE.md
+ * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
@@ -35,11 +35,11 @@ final class ValidateStage implements ValidateStageInterface
     /**
      * {@inheritdoc}
      */
-    public function apply($object, string $resourceClass, string $operationName, array $context): void
+    public function __invoke($object, string $resourceClass, string $operationName, array $context): void
     {
         $this->eventDispatcher->dispatch(new PreValidateEvent($object, $resourceClass, $operationName, $context));
 
-        $this->validateStage->apply($object, $resourceClass, $operationName, $context);
+        ($this->validateStage)($object, $resourceClass, $operationName, $context);
 
         $this->eventDispatcher->dispatch(new PostValidateEvent($object, $resourceClass, $operationName, $context));
     }

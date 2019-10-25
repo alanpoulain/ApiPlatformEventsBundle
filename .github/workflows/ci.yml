@@ -1,0 +1,95 @@
+name: CI
+
+on:
+    push:
+    pull_request:
+
+env:
+    COMPOSER_ALLOW_SUPERUSER: '1'
+    COVERAGE: '0'
+
+jobs:
+    analyze:
+        name: Analyze
+        runs-on: ubuntu-latest
+        container:
+            image: php:7.3-alpine
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v1
+            - name: Install Composer
+              run: wget -qO - https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --quiet
+            - name: Composer install
+              run: composer install --no-progress --no-suggest --ignore-platform-reqs --ansi
+            - name: Disable PHP memory limit
+              run: echo 'memory_limit=-1' >> /usr/local/etc/php/php.ini
+            - name: Analyze
+              run: vendor/bin/phpqa --execution no-parallel --progress-delay=-1 --ansi
+
+    phpunit:
+        name: PHPUnit (PHP ${{ matrix.php }})
+        runs-on: ubuntu-latest
+        container:
+            image: php:${{ matrix.php }}-alpine
+        strategy:
+            matrix:
+                php:
+                    - '7.2'
+                    - '7.3'
+                    - '7.4-rc'
+                include:
+                    - php: '7.3'
+                      coverage: true
+            fail-fast: false
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v1
+            - name: Install pcov PHP extension
+              if: matrix.coverage
+              run: |
+                  apk add $PHPIZE_DEPS
+                  pecl install pcov
+                  docker-php-ext-enable pcov
+            - name: Install Composer
+              run: wget -qO - https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --quiet
+            - name: Composer install
+              run: composer install --no-progress --no-suggest --ignore-platform-reqs --ansi
+            - name: Enable code coverage
+              if: matrix.coverage
+              run: echo '::set-env name=COVERAGE::1'
+            - name: PHPUnit
+              run: |
+                  if [ "$COVERAGE" = '1' ]; then
+                      vendor/bin/phpunit --coverage-clover ./clover.xml --colors=always
+                  else
+                      vendor/bin/phpunit --colors=always
+                  fi
+            - name: Upload coverage results to Coveralls
+              if: matrix.coverage
+              env:
+                  COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  composer global require --no-progress --no-suggest --ansi cedx/coveralls
+                  export PATH="$PATH:$HOME/.composer/vendor/bin"
+                  coveralls ./clover.xml
+
+    phpunit-lowest-deps:
+        name: PHPUnit (PHP ${{ matrix.php }}) (lowest dependencies)
+        runs-on: ubuntu-latest
+        container:
+            image: php:${{ matrix.php }}-alpine
+        strategy:
+            matrix:
+                php:
+                    - '7.3'
+                    - '7.4-rc'
+            fail-fast: false
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v1
+            - name: Install Composer
+              run: wget -qO - https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --quiet
+            - name: Composer Update
+              run: composer update --no-progress --no-suggest --prefer-stable --prefer-lowest --ignore-platform-reqs --ansi
+            - name: PHPUnit
+              run: vendor/bin/phpunit --colors=always

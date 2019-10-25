@@ -5,7 +5,7 @@
  *
  * (c) Alan Poulain <contact@alanpoulain.eu>
  *
- * For the full copyright and license information, please view the LICENSE.md
+ * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
@@ -14,74 +14,164 @@ declare(strict_types=1);
 namespace ApiPlatform\EventsBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event as BaseEvent;
+use Symfony\Contracts\EventDispatcher\Event as BaseContractEvent;
 
-/**
- * @author Alan Poulain <contact@alanpoulain.eu>
- */
-abstract class Event extends BaseEvent implements EventInterface
-{
-    private $data;
-    private $resourceName;
-    private $operationName;
-    private $context;
-
-    public function __construct($data, ?string $resourceName, string $operationName, array $context = [])
+if (class_exists(BaseContractEvent::class)) {
+    /**
+     * @author Alan Poulain <contact@alanpoulain.eu>
+     *
+     * @psalm-immutable
+     */
+    abstract class Event extends BaseContractEvent implements EventInterface
     {
-        $this->data = $data;
-        $this->resourceName = $resourceName;
-        $this->operationName = $operationName;
-        $this->context = $context;
+        /**
+         * @var iterable|object|null
+         */
+        private $data;
+        private $resourceName;
+        private $operationName;
+        private $context;
+
+        /**
+         * @param object|iterable|null $data
+         */
+        public function __construct($data, ?string $resourceName, string $operationName, array $context = [])
+        {
+            $this->data = $data;
+            $this->resourceName = $resourceName;
+            $this->operationName = $operationName;
+            $this->context = $context;
+        }
+
+        public function getData()
+        {
+            return $this->data;
+        }
+
+        public function withData($data): EventInterface
+        {
+            $event = clone $this;
+            $event->data = $data;
+
+            return $event;
+        }
+
+        public function getResourceName(): ?string
+        {
+            return $this->resourceName;
+        }
+
+        public function withResourceName(?string $resourceName): EventInterface
+        {
+            $event = clone $this;
+            $event->resourceName = $resourceName;
+
+            return $event;
+        }
+
+        public function getOperationName(): string
+        {
+            return $this->operationName;
+        }
+
+        public function withOperationName(string $operationName): EventInterface
+        {
+            $event = clone $this;
+            $event->operationName = $operationName;
+
+            return $event;
+        }
+
+        public function getContext(): array
+        {
+            return $this->context;
+        }
+
+        public function withContext(array $context): EventInterface
+        {
+            $event = clone $this;
+            $event->context = $context;
+
+            return $event;
+        }
     }
-
-    public function getData()
+} else {
+    /**
+     * @author Alan Poulain <contact@alanpoulain.eu>
+     *
+     * @psalm-immutable
+     */
+    abstract class Event extends BaseEvent implements EventInterface
     {
-        return $this->data;
-    }
+        /**
+         * @var iterable|object|null
+         */
+        private $data;
+        private $resourceName;
+        private $operationName;
+        private $context;
 
-    public function withData($data): self
-    {
-        $event = clone $this;
-        $event->data = $data;
+        /**
+         * @param object|iterable|null $data
+         */
+        public function __construct($data, ?string $resourceName, string $operationName, array $context = [])
+        {
+            $this->data = $data;
+            $this->resourceName = $resourceName;
+            $this->operationName = $operationName;
+            $this->context = $context;
+        }
 
-        return $event;
-    }
+        public function getData()
+        {
+            return $this->data;
+        }
 
-    public function getResourceName(): ?string
-    {
-        return $this->resourceName;
-    }
+        public function withData($data): EventInterface
+        {
+            $event = clone $this;
+            $event->data = $data;
 
-    public function withResourceName(?string $resourceName): self
-    {
-        $event = clone $this;
-        $event->resourceName = $resourceName;
+            return $event;
+        }
 
-        return $event;
-    }
+        public function getResourceName(): ?string
+        {
+            return $this->resourceName;
+        }
 
-    public function getOperationName(): string
-    {
-        return $this->operationName;
-    }
+        public function withResourceName(?string $resourceName): EventInterface
+        {
+            $event = clone $this;
+            $event->resourceName = $resourceName;
 
-    public function withOperationName(string $operationName): self
-    {
-        $event = clone $this;
-        $event->operationName = $operationName;
+            return $event;
+        }
 
-        return $event;
-    }
+        public function getOperationName(): string
+        {
+            return $this->operationName;
+        }
 
-    public function getContext(): array
-    {
-        return $this->context;
-    }
+        public function withOperationName(string $operationName): EventInterface
+        {
+            $event = clone $this;
+            $event->operationName = $operationName;
 
-    public function withContext(array $context): self
-    {
-        $event = clone $this;
-        $this->context = $context;
+            return $event;
+        }
 
-        return $event;
+        public function getContext(): array
+        {
+            return $this->context;
+        }
+
+        public function withContext(array $context): EventInterface
+        {
+            $event = clone $this;
+            $event->context = $context;
+
+            return $event;
+        }
     }
 }

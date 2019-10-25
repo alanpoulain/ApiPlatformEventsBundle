@@ -5,7 +5,7 @@
  *
  * (c) Alan Poulain <contact@alanpoulain.eu>
  *
- * For the full copyright and license information, please view the LICENSE.md
+ * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
@@ -35,11 +35,11 @@ final class SerializeStage implements SerializeStageInterface
     /**
      * {@inheritdoc}
      */
-    public function apply($itemOrCollection, string $resourceClass, string $operationName, array $context): ?array
+    public function __invoke($itemOrCollection, string $resourceClass, string $operationName, array $context): ?array
     {
         $this->eventDispatcher->dispatch(new PreSerializeEvent($itemOrCollection, $resourceClass, $operationName, $context));
 
-        $serializedData = $this->serializeStage->apply($itemOrCollection, $resourceClass, $operationName, $context);
+        $serializedData = ($this->serializeStage)($itemOrCollection, $resourceClass, $operationName, $context);
 
         $this->eventDispatcher->dispatch(new PostSerializeEvent($serializedData, $resourceClass, $operationName, $context));
 

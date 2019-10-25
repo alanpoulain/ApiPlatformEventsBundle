@@ -5,7 +5,7 @@
  *
  * (c) Alan Poulain <contact@alanpoulain.eu>
  *
- * For the full copyright and license information, please view the LICENSE.md
+ * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
@@ -19,7 +19,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 /**
  * @author Alan Poulain <contact@alanpoulain.eu>
  */
-class Configuration implements ConfigurationInterface
+final class Configuration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder(): TreeBuilder
     {
@@ -28,6 +28,7 @@ class Configuration implements ConfigurationInterface
             $rootNode = $treeBuilder->getRootNode();
         } else {
             $treeBuilder = new TreeBuilder();
+            /** @psalm-suppress DeprecatedMethod */
             $rootNode = $treeBuilder->root('api_platform_events');
         }
 

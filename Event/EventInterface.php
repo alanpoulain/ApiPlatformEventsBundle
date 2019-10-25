@@ -5,7 +5,7 @@
  *
  * (c) Alan Poulain <contact@alanpoulain.eu>
  *
- * For the full copyright and license information, please view the LICENSE.md
+ * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
@@ -18,8 +18,14 @@ namespace ApiPlatform\EventsBundle\Event;
  */
 interface EventInterface
 {
+    /**
+     * @return object|iterable|null
+     */
     public function getData();
 
+    /**
+     * @param object|iterable|null $data
+     */
     public function withData($data): self;
 
     public function getResourceName(): ?string;

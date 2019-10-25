@@ -5,7 +5,7 @@
  *
  * (c) Alan Poulain <contact@alanpoulain.eu>
  *
- * For the full copyright and license information, please view the LICENSE.md
+ * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
@@ -35,11 +35,11 @@ final class ReadStage implements ReadStageInterface
     /**
      * {@inheritdoc}
      */
-    public function apply(?string $resourceClass, ?string $rootClass, string $operationName, array $context)
+    public function __invoke(?string $resourceClass, ?string $rootClass, string $operationName, array $context)
     {
         $this->eventDispatcher->dispatch(new PreReadEvent(null, $resourceClass, $operationName, $context));
 
-        $readObject = $this->readStage->apply($resourceClass, $rootClass, $operationName, $context);
+        $readObject = ($this->readStage)($resourceClass, $rootClass, $operationName, $context);
 
         $this->eventDispatcher->dispatch(new PostReadEvent($readObject, $resourceClass, $operationName, $context));
 

@@ -17,14 +17,20 @@
         "exclude-from-classmap": [ "/Tests/" ]
     },
     "require": {
-        "php": ">=7.1",
-        "api-platform/core": "dev-master",
+        "php": ">=7.2",
+        "api-platform/core": "^2.5",
         "symfony/event-dispatcher": "^4.0"
     },
     "require-dev": {
+        "edgedesign/phpqa": "^1.23",
+        "friendsofphp/php-cs-fixer": "^2.15",
+        "phpdocumentor/reflection-docblock": "^4.0.1",
+        "phpstan/phpstan": "^0.11.19",
         "phpunit/phpunit": "^8.3",
+        "sensiolabs/security-checker": "^6.0",
         "symfony/framework-bundle": "^4.0",
-        "symfony/phpunit-bridge": "^4.0"
+        "symfony/phpunit-bridge": "^4.3.4",
+        "vimeo/psalm": "^3.6"
     },
     "config": {
         "sort-packages": true

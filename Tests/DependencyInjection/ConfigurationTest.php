@@ -5,7 +5,7 @@
  *
  * (c) Alan Poulain <contact@alanpoulain.eu>
  *
- * For the full copyright and license information, please view the LICENSE.md
+ * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
@@ -18,9 +18,13 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Processor;
 
 /**
+ * @covers \ApiPlatform\EventsBundle\DependencyInjection\Configuration
+ *
+ * @internal
+ *
  * @author Alan Poulain <contact@alanpoulain.eu>
  */
-class ConfigurationTest extends TestCase
+final class ConfigurationTest extends TestCase
 {
     private $configuration;
     private $processor;
@@ -38,6 +42,6 @@ class ConfigurationTest extends TestCase
     {
         $config = $this->processor->processConfiguration($this->configuration, []);
 
-        $this->assertEquals(['graphql' => ['enabled' => false]], $config);
+        static::assertSame(['graphql' => ['enabled' => false]], $config);
     }
 }

@@ -5,7 +5,7 @@
  *
  * (c) Alan Poulain <contact@alanpoulain.eu>
  *
- * For the full copyright and license information, please view the LICENSE.md
+ * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
@@ -15,6 +15,8 @@ namespace ApiPlatform\EventsBundle\Event;
 
 /**
  * @author Alan Poulain <contact@alanpoulain.eu>
+ *
+ * @psalm-immutable
  */
 final class PostSerializeEvent extends Event
 {

@@ -5,7 +5,7 @@
  *
  * (c) Alan Poulain <contact@alanpoulain.eu>
  *
- * For the full copyright and license information, please view the LICENSE.md
+ * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
@@ -35,11 +35,11 @@ final class WriteStage implements WriteStageInterface
     /**
      * {@inheritdoc}
      */
-    public function apply($data, string $resourceClass, string $operationName, array $context)
+    public function __invoke($data, string $resourceClass, string $operationName, array $context)
     {
         $this->eventDispatcher->dispatch(new PreWriteEvent($data, $resourceClass, $operationName, $context));
 
-        $writtenObject = $this->writeStage->apply($data, $resourceClass, $operationName, $context);
+        $writtenObject = ($this->writeStage)($data, $resourceClass, $operationName, $context);
 
         $this->eventDispatcher->dispatch(new PostWriteEvent($writtenObject, $resourceClass, $operationName, $context));
 
